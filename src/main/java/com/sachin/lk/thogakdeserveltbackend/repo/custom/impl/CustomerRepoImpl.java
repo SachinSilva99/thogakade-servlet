@@ -47,22 +47,18 @@ public class CustomerRepoImpl implements CustomerRepo {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Customer> query = criteriaBuilder.createQuery(Customer.class);
         query.from(Customer.class);
-        List<Customer> customers = session.createQuery(query).getResultList();
-        session.close();
-        return customers;
+        return session.createQuery(query).getResultList();
     }
 
     @Override
     public Optional<Customer> findByPk(String pk,Session session) {
-        Customer customer = session.load(Customer.class, pk);
-        session.close();
+        Customer customer = session.get(Customer.class, pk);
         return customer == null ? Optional.empty() : Optional.of(customer);
     }
 
     @Override
     public boolean existByPk(String pk,Session session) {
-        Customer customer = session.load(Customer.class, pk);
-        session.close();
+        Customer customer = session.get(Customer.class, pk);
         return customer != null;
     }
 
@@ -71,8 +67,6 @@ public class CustomerRepoImpl implements CustomerRepo {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Customer> query = criteriaBuilder.createQuery(Customer.class);
         query.from(Customer.class);
-        int size = session.createQuery(query).getResultList().size();
-        session.close();
-        return size;
+        return session.createQuery(query).getResultList().size();
     }
 }

@@ -15,4 +15,5 @@ public interface CustomerService extends SuperService {
     List<String> loadCustomerIds();
     List<CustomerDTO>getAllCustomers();
 
+    void delete(String id) throws Exception;
 }

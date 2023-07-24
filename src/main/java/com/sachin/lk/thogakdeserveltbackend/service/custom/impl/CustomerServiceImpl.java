@@ -70,4 +70,30 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customer -> mapper.toCustomerDTO(customer)).collect(Collectors.toList());
     }
+
+    @Override
+    public void delete(String id) throws NotFoundException, ConstraintViolationException {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Optional<Customer> customerOp = customerRepo.findByPk(id, session);
+            if (customerOp.isPresent()) {
+                Customer customer = customerOp.get();
+                customerRepo.delete(customer, session);
+                transaction.commit();
+                System.out.println("Customer with ID: " + id + " deleted successfully");
+            } else {
+                throw new NotFoundException("Customer with ID: " + id + " not found");
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 }

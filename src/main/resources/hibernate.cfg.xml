@@ -5,6 +5,5 @@
 <hibernate-configuration>
   <session-factory>
     <property name="connection.datasource">java:comp/env/jdbc/hibernate</property>
-
   </session-factory>
 </hibernate-configuration>
