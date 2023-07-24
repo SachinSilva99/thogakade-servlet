@@ -1,9 +1,11 @@
 package com.sachin.lk.thogakdeserveltbackend.controller;
 
 import com.sachin.lk.thogakdeserveltbackend.dto.CustomerDTO;
+import com.sachin.lk.thogakdeserveltbackend.entity.Customer;
 import com.sachin.lk.thogakdeserveltbackend.service.ServiceFactory;
 import com.sachin.lk.thogakdeserveltbackend.service.ServiceType;
 import com.sachin.lk.thogakdeserveltbackend.service.custom.CustomerService;
+import com.sachin.lk.thogakdeserveltbackend.service.exception.NotFoundException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
@@ -39,11 +41,25 @@ public class CustomerServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+        try {
+            CustomerDTO updatedCustomerDto = customerService.update(customerDTO);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setContentType("application/json");
+            jsonb.toJson(updatedCustomerDto, resp.getWriter());
+
+        } catch (NotFoundException e) {
+
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
             customerService.delete(req.getParameter("id"));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,4 +77,5 @@ public class CustomerServlet extends HttpServlet {
         resp.setContentType("application/json");
         jsonb.toJson(customerService.getAllCustomers(), resp.getWriter());
     }
+
 }

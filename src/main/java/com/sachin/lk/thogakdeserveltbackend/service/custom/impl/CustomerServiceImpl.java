@@ -96,4 +96,33 @@ public class CustomerServiceImpl implements CustomerService {
             session.close();
         }
     }
+
+    @Override
+    public CustomerDTO update(CustomerDTO customerDTO) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = null;
+        Customer updatedCustomer;
+        try {
+            transaction = session.beginTransaction();
+            Optional<Customer> customerOp = customerRepo.findByPk(customerDTO.getId(), session);
+            if (customerOp.isPresent()) {
+                Customer customer = customerOp.get();
+                customer.setName(customerDTO.getName());
+                customer.setAddress(customerDTO.getAddress());
+                updatedCustomer = customerRepo.update(customer, session);
+                transaction.commit();
+                return mapper.toCustomerDTO(updatedCustomer);
+            } else {
+                throw new NotFoundException("Customer with ID: " + customerDTO.getId() + " not found");
+            }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 }
