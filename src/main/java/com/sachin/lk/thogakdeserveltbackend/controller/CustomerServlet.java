@@ -1,21 +1,20 @@
 package com.sachin.lk.thogakdeserveltbackend.controller;
 
 import com.sachin.lk.thogakdeserveltbackend.dto.CustomerDTO;
-import com.sachin.lk.thogakdeserveltbackend.entity.Customer;
 import com.sachin.lk.thogakdeserveltbackend.service.ServiceFactory;
 import com.sachin.lk.thogakdeserveltbackend.service.ServiceType;
 import com.sachin.lk.thogakdeserveltbackend.service.custom.CustomerService;
+import com.sachin.lk.thogakdeserveltbackend.service.exception.DuplicateException;
 import com.sachin.lk.thogakdeserveltbackend.service.exception.NotFoundException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import org.hibernate.exception.ConstraintViolationException;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /*
 Author : Sachin Silva
@@ -28,7 +27,12 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
-        customerService.save(customerDTO);
+        try {
+            customerService.save(customerDTO);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+        }catch (DuplicateException e){
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
     }
 
     @Override
@@ -65,7 +69,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         try {
             customerService.delete(req.getParameter("id"));
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

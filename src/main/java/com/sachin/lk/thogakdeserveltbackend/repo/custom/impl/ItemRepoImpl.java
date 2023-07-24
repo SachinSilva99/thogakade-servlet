@@ -18,26 +18,26 @@ public class ItemRepoImpl implements ItemRepo {
         try {
             session.save(item);
             return item;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ConstraintViolationException("Item did not save");
         }
     }
 
     @Override
-    public Item update(Item item,Session session) throws ConstraintViolationException {
+    public Item update(Item item, Session session) throws ConstraintViolationException {
         try {
             session.update(item);
             return item;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ConstraintViolationException("Did not update item");
         }
     }
 
     @Override
-    public void delete(Item item,Session session) throws ConstraintViolationException {
+    public void delete(Item item, Session session) throws ConstraintViolationException {
         try {
             session.delete(item);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ConstraintViolationException("Did not delete item");
         }
     }
@@ -47,22 +47,18 @@ public class ItemRepoImpl implements ItemRepo {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Item> query = criteriaBuilder.createQuery(Item.class);
         query.from(Item.class);
-        List<Item> items = session.createQuery(query).getResultList();
-        session.close();
-        return items;
+        return session.createQuery(query).getResultList();
     }
 
     @Override
-    public Optional<Item> findByPk(String pk,Session session) {
-        Item item = session.load(Item.class, pk);
-        session.close();
+    public Optional<Item> findByPk(String pk, Session session) {
+        Item item = session.get(Item.class, pk);
         return item == null ? Optional.empty() : Optional.of(item);
     }
 
     @Override
-    public boolean existByPk(String pk,Session session) {
-        Item item = session.load(Item.class, pk);
-        session.close();
+    public boolean existByPk(String pk, Session session) {
+        Item item = session.get(Item.class, pk);
         return item != null;
     }
 
@@ -71,8 +67,6 @@ public class ItemRepoImpl implements ItemRepo {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Item> query = criteriaBuilder.createQuery(Item.class);
         query.from(Item.class);
-        int size = session.createQuery(query).getResultList().size();
-        session.close();
-        return size;
+        return session.createQuery(query).getResultList().size();
     }
 }
