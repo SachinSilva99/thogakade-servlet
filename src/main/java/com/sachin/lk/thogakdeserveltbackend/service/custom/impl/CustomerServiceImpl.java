@@ -15,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,9 +67,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDTO> getAllCustomers() {
         Session session = FactoryConfiguration.getInstance().getSession();
-        return customerRepo.findAll(session)
+        List<CustomerDTO> customerDTOList = customerRepo.findAll(session)
                 .stream()
                 .map(customer -> mapper.toCustomerDTO(customer)).collect(Collectors.toList());
+        session.close();
+        return customerDTOList;
     }
 
     @Override
@@ -124,5 +127,21 @@ public class CustomerServiceImpl implements CustomerService {
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public List<CustomerDTO> searchCustomers(String data) {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        try {
+            return customerRepo.findAll(session).stream()
+                    .filter(customer -> customer.getId().contains(data) || customer.getName().contains(data))
+                    .map(customer -> mapper.toCustomerDTO(customer))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return Collections.emptyList();
     }
 }

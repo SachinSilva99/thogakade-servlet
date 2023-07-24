@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /*
 Author : Sachin Silva
@@ -33,12 +34,18 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
-        if (id == null || id.isEmpty()) {
-            getAllCustomers(resp);
-        } else {
+        String search = req.getParameter("search-data");
+        if (id != null) {
             getCustomer(id, resp);
+        } else if (search != null) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setContentType("application/json");
+            jsonb.toJson(customerService.searchCustomers(search), resp.getWriter());
+        } else {
+            getAllCustomers(resp);
         }
     }
+
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -50,7 +57,6 @@ public class CustomerServlet extends HttpServlet {
             jsonb.toJson(updatedCustomerDto, resp.getWriter());
 
         } catch (NotFoundException e) {
-
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
