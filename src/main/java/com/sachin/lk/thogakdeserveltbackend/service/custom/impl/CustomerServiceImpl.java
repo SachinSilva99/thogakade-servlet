@@ -62,4 +62,12 @@ public class CustomerServiceImpl implements CustomerService {
                         .getId())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CustomerDTO> getAllCustomers() {
+        Session session = FactoryConfiguration.getInstance().getSession();
+        return customerRepo.findAll(session)
+                .stream()
+                .map(customer -> mapper.toCustomerDTO(customer)).collect(Collectors.toList());
+    }
 }

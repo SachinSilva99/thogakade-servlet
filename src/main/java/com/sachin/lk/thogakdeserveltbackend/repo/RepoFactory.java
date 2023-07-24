@@ -1,9 +1,10 @@
 package com.sachin.lk.thogakdeserveltbackend.repo;
 
-import lk.ijse.thogakade.repo.custom.impl.CustomerRepoImpl;
-import lk.ijse.thogakade.repo.custom.impl.ItemRepoImpl;
-import lk.ijse.thogakade.repo.custom.impl.OrderDetailRepoImpl;
-import lk.ijse.thogakade.repo.custom.impl.OrderRepoImpl;
+
+import com.sachin.lk.thogakdeserveltbackend.repo.custom.impl.CustomerRepoImpl;
+import com.sachin.lk.thogakdeserveltbackend.repo.custom.impl.ItemRepoImpl;
+import com.sachin.lk.thogakdeserveltbackend.repo.custom.impl.OrderDetailRepoImpl;
+import com.sachin.lk.thogakdeserveltbackend.repo.custom.impl.OrderRepoImpl;
 
 public class RepoFactory {
     private static RepoFactory repoFactory = new RepoFactory();

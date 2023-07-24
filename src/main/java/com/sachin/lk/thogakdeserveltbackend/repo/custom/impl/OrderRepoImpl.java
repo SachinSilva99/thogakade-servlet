@@ -1,8 +1,9 @@
 package com.sachin.lk.thogakdeserveltbackend.repo.custom.impl;
 
-import lk.ijse.thogakade.entity.Orders;
-import lk.ijse.thogakade.repo.custom.OrderRepo;
-import lk.ijse.thogakade.repo.exception.ConstraintViolationException;
+
+import com.sachin.lk.thogakdeserveltbackend.entity.Orders;
+import com.sachin.lk.thogakdeserveltbackend.repo.custom.OrderRepo;
+import com.sachin.lk.thogakdeserveltbackend.repo.exception.ConstraintViolationException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 public class OrderRepoImpl implements OrderRepo {
 
     @Override
-    public Orders save(Orders orders,Session session) throws ConstraintViolationException {
+    public Orders save(Orders orders, Session session) throws ConstraintViolationException {
         try {
             session.save(orders);
             return orders;
