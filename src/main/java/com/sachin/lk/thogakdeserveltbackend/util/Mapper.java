@@ -1,11 +1,9 @@
 package com.sachin.lk.thogakdeserveltbackend.util;
 
-import lk.ijse.thogakade.dto.CustomerDTO;
-import lk.ijse.thogakade.dto.ItemDTO;
-import lk.ijse.thogakade.dto.OrderDTO;
-import lk.ijse.thogakade.entity.Customer;
-import lk.ijse.thogakade.entity.Item;
-import lk.ijse.thogakade.entity.Orders;
+
+
+import com.sachin.lk.thogakdeserveltbackend.dto.*;
+import com.sachin.lk.thogakdeserveltbackend.entity.*;
 
 import java.util.ArrayList;
 
@@ -15,15 +13,13 @@ public class Mapper {
                 customerDTO.getId(),
                 customerDTO.getName(),
                 customerDTO.getAddress(),
-                customerDTO.getSalary(),
                 new ArrayList<>());
     }
     public CustomerDTO toCustomerDTO(Customer customer){
         return new CustomerDTO(
                 customer.getId(),
                 customer.getName(),
-                customer.getAddress(),
-                customer.getSalary()
+                customer.getAddress()
         );
     }
     public Item toItem(ItemDTO itemDTO){
