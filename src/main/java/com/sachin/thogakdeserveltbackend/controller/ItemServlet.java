@@ -1,6 +1,8 @@
 package com.sachin.thogakdeserveltbackend.controller;
 
 import com.sachin.thogakdeserveltbackend.dto.ItemDTO;
+import com.sachin.thogakdeserveltbackend.regex.Validates;
+import com.sachin.thogakdeserveltbackend.regex.Validation;
 import com.sachin.thogakdeserveltbackend.service.ServiceFactory;
 import com.sachin.thogakdeserveltbackend.service.ServiceType;
 import com.sachin.thogakdeserveltbackend.service.custom.ItemService;
@@ -23,7 +25,7 @@ Author : Sachin Silva
 @WebServlet(name = "item", value = "/item")
 public class ItemServlet extends HttpServlet {
     private final ItemService itemService = ServiceFactory.getInstance().getService(ServiceType.ITEM);
-
+    private final Validation validation = new Validation();
     private final Jsonb jsonb = JsonbBuilder.create();
 
     @Override
@@ -56,6 +58,22 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ItemDTO itemDTO = jsonb.fromJson(req.getReader(), ItemDTO.class);
+        if (!validation.match(itemDTO.getCode(), Validates.ITEM_CODE)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        if (!validation.match(itemDTO.getDescription(), Validates.ITEM_DESCRIPTION)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        if (!validation.match(String.valueOf(itemDTO.getQtyOnHand()), Validates.QTY)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        if (!validation.match(String.valueOf(itemDTO.getUnitPrice()), Validates.PRICE)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         try {
             itemService.save(itemDTO);
             resp.setStatus(HttpServletResponse.SC_CREATED);
