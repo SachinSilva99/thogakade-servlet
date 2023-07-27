@@ -36,8 +36,6 @@ public class OderServlet extends HttpServlet {
         String lastOrder = req.getParameter("lastOrder");
         boolean isLastOrder = "true".equalsIgnoreCase(lastOrder);
 
-
-
         if (shouldIncludeDetails) {
             List<OrderDetailDTO> orderDetails = orderService.getAllOrderDetails();
             resp.setStatus(HttpServletResponse.SC_OK);
